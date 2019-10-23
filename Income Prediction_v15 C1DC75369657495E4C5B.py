@@ -556,9 +556,9 @@ print('Mean score = ' + str(sum(scores)/len(scores)))
 # In[22]:
 
 
-# output2 = output.copy()
-# # # output2
-# output3 = output2.groupby(['Instance']).mean()
-# output3.head()
-# output3.to_csv('test15 catboost.csv')
+output2 = output.copy()
+# # output2
+output3 = output2.groupby(['Instance']).mean()
+output3.head()
+output3.to_csv('test15 catboost.csv')
 
