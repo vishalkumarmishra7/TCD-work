@@ -1,0 +1,1 @@
+This code was used in an in class competition at Trinity College Dublin. It scored 11th out of 60 teams. The link to the competition is as follows - https://www.kaggle.com/c/tcd-ml-comp-201920-income-pred-group/submissions
