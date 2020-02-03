@@ -21,8 +21,6 @@ The repository contains
 
 ### Tech
 
-Dillinger uses a number of open source projects to work properly:
-
 * [jiaaro/pydub] - https://github.com/jiaaro/pydub
 * [librosa/librosa] - https://github.com/librosa/librosa
 * [tensorflow/tensorflow] - https://github.com/tensorflow/tensorflow
