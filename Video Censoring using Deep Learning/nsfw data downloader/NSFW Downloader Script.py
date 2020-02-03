@@ -9,16 +9,18 @@
 import os
 import requests
 import pandas as pd
+
 ### Intitialise the download process
-thisdir = "C:/Users/adhis/Desktop/git_rep/nsfw_data_source_urls-master"
-destination = "test"
-completed_url_path = "completed_urls.csv"
+
+thisdir = "dissertation/nsfw data downloader"
+destination = "dissertation/nsfw data downloader/image_data"
+completed_url_path = "dissertation/nsfw data downloader/completed_urls.csv"
 
 if os.path.isdir(destination) == False:
     os.makedirs(destination)
 
 try:
-    pd.read_csv(completed_url_path)
+    df = pd.read_csv(completed_url_path)
 except:
     df = pd.DataFrame(columns = ['URLs'])
 
@@ -41,15 +43,19 @@ for r, d, f in os.walk(thisdir):
 
 
 p_urls = []
+c_urls_0 = list(df['URLs'])
+f_list = list(set(f_list).difference(c_urls_0))
 c_urls = []
+
 for i in [f_list[0]]:
     u_list = list(open(i))
     cnt = 0
+    print(i)
     for j in u_list[11:20]:
         j.replace('\n','')
         cnt += 1
-        if i.split('\\')[-2] != 'nsfw_data_source_urls-master':
-            file_name = i.split('\\')[-2] + '_' + str(cnt)
+        if i.split('/')[-2] != 'nsfw data downloader':
+            file_name = i.split('/')[-2] + '_' + str(cnt)
             if cnt % 100 == 0:
                 print('URLs processed: ',cnt)
             try:
