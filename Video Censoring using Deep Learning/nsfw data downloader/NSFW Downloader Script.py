@@ -47,11 +47,10 @@ c_urls_0 = list(df['URLs'])
 f_list = list(set(f_list).difference(c_urls_0))
 c_urls = []
 
-for i in [f_list[0]]:
+for i in f_list:
     u_list = list(open(i))
     cnt = 0
-    print(i)
-    for j in u_list[11:20]:
+    for j in u_list:
         j.replace('\n','')
         cnt += 1
         if i.split('/')[-2] != 'nsfw data downloader':
