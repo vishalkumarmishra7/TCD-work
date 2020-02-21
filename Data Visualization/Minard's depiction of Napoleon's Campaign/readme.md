@@ -9,7 +9,7 @@ The data consists of 3 different sets of information which have been broken in 3
 - City names and co-ordinates of their centers
 
 ###### A Static version of the visualisation is shown below
-![Minard's Chart Static Image](https://github.com/amittal-tcd/TCD-work/blob/master/Data%20Visualization/Minard's%20depiction%20of%20Napoleon's%20Campaign/Minard_v2.jpg)
+![Minard's Chart Static Image](https://github.com/amittal-tcd/TCD-work/blob/master/Data%20Visualization/Minard's%20depiction%20of%20Napoleon's%20Campaign/Minard.jpg)
 
 The above image is just a static frame and the real processing sketch is animated to follow through the path that the army took. The video animation can be downloaded from the following link
 
