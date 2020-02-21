@@ -2,7 +2,7 @@
 
 This "Diagram of the causes of mortality in the army in the East" was published in Notes on Matters Affecting the Health, Efficiency, and Hospital Administration of the British Army and sent to Queen Victoria in 1858.
 
-This graphic indicates the number of deaths that occured from preventable diseases (in blue), those that were the results of wounds (in red), and those due to other causes (in black).
+This graphic indicates the number of deaths that occured from preventable diseases (in red), those that were the results of wounds (in purple), and those due to other causes (in green).
 
 ### The chart has been reconstructed in Processing 3
 The data consists of reasons of mortality and the number of deaths by month.
