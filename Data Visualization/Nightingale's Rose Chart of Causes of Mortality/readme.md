@@ -20,4 +20,4 @@ Both the rose charts depict the same data but the one of the right has been slig
         - Zoom: The chart zooms in and out
 
 ###### The Processing sketch can also be animated to rotate the diagram by clicking the "a" key. The animation would look as shown in the video below
-![Rose Chart Video](https://github.com/amittal-tcd/TCD-work/blob/master/Data%20Visualization/Nightingale's%20Rose%20Chart%20of%20Causes%20of%20Mortality/Nightingale%20Animation.avi)
+![Rose Chart Video](https://www.youtube.com/watch?v=dpMYmpjY65c)
