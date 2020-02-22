@@ -13,7 +13,7 @@ The data consists of 3 different sets of information which have been broken in 3
 
 The above image is just a static frame and the real processing sketch is animated to follow through the path that the army took. The video animation can be downloaded from the following link
 
-![Minard's Chart Animation](https://www.youtube.com/watch?v=OOnjghqfK4c)
+### Minard's Chart Animation: https://www.youtube.com/watch?v=OOnjghqfK4c
 
 ## Code Features
 - Animation: Stepwise progression of the army
