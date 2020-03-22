@@ -1,124 +1,95 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import tensorflow as tf
-import random
 
 import os
 import time
-import cv2
-import numpy as np
-from shutil import copyfile
 
 from matplotlib import pyplot as plt
 from IPython import display
 
-
-# nsfw_path = 'overflow/dissertation/nsfw data downloader/image_data'
-# l = os.listdir(nsfw_path)
-# 
-# cnt = 0
-# for i in l:
-#     cnt += 1
-#     if cnt > 10000:
-#         break
-#     ind = random.randint(1,len(l))
-#     if cnt%3 == 0:
-#         if cnt%2 == 0:
-#             tt = 'val'
-#         else:
-#             tt = 'train'
-#     else:
-#         tt = 'test'
-#     copyfile(os.path.join(nsfw_path, l[ind]), 'nsfw/' + tt + '/' + l[ind])
-
-PATH = 'nsfw/'
+#os.chdir('/users/pgrad/mohanni/demo/ai_gan')
 
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
 IMG_WIDTH = 256
 IMG_HEIGHT = 256
 
-def im_change(path):
-    print('File to be read - ',path)
-    image = cv2.imread(path)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 100, 100)
-    cv2.imwrite(edges,'GAN/temp.jpg')
-    
 def load(image_file):
-  im_change(image_file)
-  
-  real_image = tf.io.read_file(image_file)
-  real_image = tf.image.decode_jpeg(real_image)
-
-  input_image = tf.io.read_file('GAN/temp.jpg')
-  input_image = tf.image.decode_jpeg(input_image)
-
-  input_image = tf.cast(input_image, tf.float32)
-  real_image = tf.cast(real_image, tf.float32)
-
-  return input_image, real_image
-  
+   image = tf.io.read_file(image_file)
+   image = tf.image.decode_jpeg(image)
+ 
+   w = tf.shape(image)[1]
+ 
+   w = w // 2
+   real_image = image[:, :w, :]
+   input_image = image[:, w:, :]
+ 
+   input_image = tf.cast(input_image, tf.float32)
+   real_image = tf.cast(real_image, tf.float32)
+ 
+   return input_image, real_image
+#   
 def resize(input_image, real_image, height, width):
-  input_image = tf.image.resize(input_image, [height, width],
+   input_image = tf.image.resize(input_image, [height, width],
+                                 method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+   real_image = tf.image.resize(real_image, [height, width],
                                 method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-  real_image = tf.image.resize(real_image, [height, width],
-                               method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-
-  return input_image, real_image
-  
+ 
+   return input_image, real_image
+   
 def random_crop(input_image, real_image):
-  stacked_image = tf.stack([input_image, real_image], axis=0)
-  cropped_image = tf.image.random_crop(
-      stacked_image, size=[2, IMG_HEIGHT, IMG_WIDTH, 3])
-
-  return cropped_image[0], cropped_image[1]
-  
-# normalizing the images to [-1, 1]
-
+   stacked_image = tf.stack([input_image, real_image], axis=0)
+   cropped_image = tf.image.random_crop(
+       stacked_image, size=[2, IMG_HEIGHT, IMG_WIDTH, 3])
+ 
+   return cropped_image[0], cropped_image[1]
+   
+ # normalizing the images to [-1, 1]
+# 
 def normalize(input_image, real_image):
-  input_image = (input_image / 127.5) - 1
-  real_image = (real_image / 127.5) - 1
-
-  return input_image, real_image
-  
-@tf.function()
+   input_image = (input_image / 127.5) - 1
+   real_image = (real_image / 127.5) - 1
+ 
+   return input_image, real_image
+#   
+# @tf.function()
 def random_jitter(input_image, real_image):
-  # resizing to 286 x 286 x 3
-  input_image, real_image = resize(input_image, real_image, 286, 286)
-
-  # randomly cropping to 256 x 256 x 3
-  input_image, real_image = random_crop(input_image, real_image)
-
-  if tf.random.uniform(()) > 0.5:
-    # random mirroring
-    input_image = tf.image.flip_left_right(input_image)
-    real_image = tf.image.flip_left_right(real_image)
-
-  return input_image, real_image
-  
+   # resizing to 286 x 286 x 3
+   input_image, real_image = resize(input_image, real_image, 286, 286)
+ 
+   # randomly cropping to 256 x 256 x 3
+   input_image, real_image = random_crop(input_image, real_image)
+ 
+   if tf.random.uniform(()) > 0.5:
+     # random mirroring
+     input_image = tf.image.flip_left_right(input_image)
+     real_image = tf.image.flip_left_right(real_image)
+ 
+   return input_image, real_image
+#   
 def load_image_train(image_file):
-  input_image, real_image = load(image_file)
-  input_image, real_image = random_jitter(input_image, real_image)
-  input_image, real_image = normalize(input_image, real_image)
-
-  return input_image, real_image
-  
+   input_image, real_image = load(image_file)
+   input_image, real_image = random_jitter(input_image, real_image)
+   input_image, real_image = normalize(input_image, real_image)
+ 
+   return input_image, real_image
+   
 def load_image_test(image_file):
-  input_image, real_image = load(image_file)
-  input_image, real_image = resize(input_image, real_image,
-                                   IMG_HEIGHT, IMG_WIDTH)
-  input_image, real_image = normalize(input_image, real_image)
-
-  return input_image, real_image
+   input_image, real_image = load(image_file)
+   input_image, real_image = resize(input_image, real_image,
+                                    IMG_HEIGHT, IMG_WIDTH)
+   input_image, real_image = normalize(input_image, real_image)
+ 
+   return input_image, real_image
   
-train_dataset = tf.data.Dataset.list_files(PATH+'train/*.jpg')
+train_dataset = tf.data.Dataset.list_files('ai_gan/join_train/*.jpg')
 train_dataset = train_dataset.map(load_image_train,
                                   num_parallel_calls=tf.data.experimental.AUTOTUNE)
 train_dataset = train_dataset.shuffle(BUFFER_SIZE)
 train_dataset = train_dataset.batch(BATCH_SIZE)
 
-test_dataset = tf.data.Dataset.list_files(PATH+'test/*.jpg')
+test_dataset = tf.data.Dataset.list_files('ai_gan/join_test/*.jpg')
 test_dataset = test_dataset.map(load_image_test)
 test_dataset = test_dataset.batch(BATCH_SIZE)
 
@@ -266,14 +237,32 @@ def discriminator_loss(disc_real_output, disc_generated_output):
 generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
 discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
 
-checkpoint_dir = './training_checkpoints'
+checkpoint_dir = './ai_gan/training_checkpoints'
 checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
 checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  discriminator_optimizer=discriminator_optimizer,
                                  generator=generator,
                                  discriminator=discriminator)
                                  
-def generate_images(model, test_input, tar):
+                              
+def generate_images(model, test_input, tar,num):
+  
+  prediction = model(test_input, training=True)
+
+  display_list = [test_input[0], tar[0], prediction[0]]
+  title = ['Input Image', 'Ground Truth', 'Predicted Image']
+  
+  fig = plt.figure()
+  for i in range(3):
+    plt.subplot(1, 3, i+1)
+    plt.title(title[i])
+    # getting the pixel values between [0, 1] to plot it.
+    plt.imshow(display_list[i] * 0.5 + 0.5)
+    plt.axis('off')
+  # plt.show()
+  fig.savefig('ai_gan/GAN/'+str(num)+'.jpg', dpi=fig.dpi)
+  
+def generate_images_orig(model, test_input, tar):
   
   prediction = model(test_input, training=True)
 
@@ -291,12 +280,12 @@ def generate_images(model, test_input, tar):
   fig.savefig('GAN/temp.png', dpi=fig.dpi)
   
 for example_input, example_target in test_dataset.take(1):
-  generate_images(generator, example_input, example_target)
+  generate_images(generator, example_input, example_target,110)
   
-EPOCHS = 2
+EPOCHS = 3
 
 import datetime
-log_dir="logs/"
+log_dir="ai_gan/logs/"
 
 summary_writer = tf.summary.create_file_writer(
   log_dir + "fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
@@ -329,13 +318,15 @@ def train_step(input_image, target, epoch):
     tf.summary.scalar('disc_loss', disc_loss, step=epoch)
     
 def fit(train_ds, epochs, test_ds):
-  for epoch in range(epochs):
+  for i,epoch in enumerate(range(epochs)):
     start = time.time()
 
     display.clear_output(wait=True)
 
-    for example_input, example_target in test_ds.take(1):
-      generate_images(generator, example_input, example_target)
+    jj=0
+    for example_input, example_target in test_ds.take(200):
+      generate_images(generator, example_input, example_target,str(i)+'_'+str(jj))
+      jj=jj+1
     print("Epoch: ", epoch)
 
     # Train
@@ -350,11 +341,19 @@ def fit(train_ds, epochs, test_ds):
     if (epoch + 1) % 20 == 0:
       checkpoint.save(file_prefix = checkpoint_prefix)
 
+    generator.save('ai_gan/models/mymodel_v2.h5')
+
     print ('Time taken for epoch {} is {} sec\n'.format(epoch + 1,
                                                         time.time()-start))
   checkpoint.save(file_prefix = checkpoint_prefix)
 
 fit(train_dataset, EPOCHS, test_dataset)
-
-for inp, tar in test_dataset.take(5):
-  generate_images(generator, inp, tar)
+generator.save('ai_gan/models/mymodel_v2.h5')
+#for inp, tar in test_dataset.take(5):
+#  generate_images(generator, inp, tar)
+  
+#num=0
+#for example_input,example_target in test_dataset.take(25):
+#  generate_images(generator, example_input, example_target,num)
+#  num+=1
+  
