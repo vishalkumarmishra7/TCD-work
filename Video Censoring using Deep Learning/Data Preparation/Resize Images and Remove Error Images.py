@@ -30,6 +30,8 @@ typ = '0' # For non porn images
 
 # Creating list of files in the folder
 l = os.listdir(src)
+l = [i for i in l if i[:-3].lower == 'jpeg']
+print('Number of images in non porn = ',len(l))
 
 # Running pooled processes
 pool = Pool()
@@ -41,15 +43,10 @@ typ = '1' # For Porn image
 
 # Creating list of files in the folder
 l2 = os.listdir(src)
-
-l3 = []
-
-for i in l2:
-    if i[:-3] == 'jpg':
-        l3.append(i)    
-
-l3 = random.sample(l3,len(l))
+l2 = [i for i in l2 if i[:-3].lower == 'jpeg']
+l2 = random.sample(l2,len(l))
+print('Number of images in non porn = ',len(l2))
 
 # Running pooled processes
 pool = Pool()
-pool.map(resize , l3)
+pool.map(resize , l2)
