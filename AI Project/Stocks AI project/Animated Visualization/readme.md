@@ -1,5 +1,7 @@
 # Investor Progression
 
+![Stock Progresssion Visualization](https://github.com/amittal-tcd/TCD-work/blob/master/AI%20Project/Stocks%20AI%20project/Animated%20Visualization/Viz/Investment-Portfolio-Manager.gif)
+
 This is an exploratory visualization which can be used to identify patterns of stock selection by different agents. Also, the individual portfolios show the selection order for different agents as calculated by the ranking logics. Finally, the balance amounts answer the question of which algorithm performed the best. The visualization is broken down into 3 parts which form 3 levels of detail for a hierarchical drill down of investment strategy and its effectiveness.
 
 #### 1. Stock State:
